@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+
+const app = require('../app')
+const http = require('http').Server(app)
+const port = '4000'
+const _io = require('socket.io')(http)
+
+
+const Game = require('./../lib/Game')
+const game = new Game()
+// const Io = require('./../lib/io')
+
+const io = require('./../lib/io')(_io, game)
+// const io = (servObj) => {
+  // return new Io(servObj)
+// }
+
+
+
+
+
+
+
+app.set('port', port);
+
+ http.listen(port, function(){
+   console.log('listening on *:' + port);
+   io.init()
+
+   //io.init()
+ })

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+
+
+<link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+
+
+<link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
+<link rel='stylesheet' href='/css/style.css' />
+
+  </head>
+  <body>
+
+
+    <h1>Tic Tac Toe</h1>
+    <div id="root">
+    <div class="hidden" id="name_output">
+      Name:
+      <span id="name_output_line"></span>
+    </div>
+      <div id="name_input">
+        <input type="text" id="name_input_field" placeholder="What's your name?">
+        <!-- <input type="submit" id="name_input_submit"> -->
+      </div>
+  </br>
+    <button id="new_game">Find Opponent</button>
+      <div id="game_area">
+        <div class="row">
+          <ul>
+          <button class= "game_unit empty button-outline" id="0"></button>
+          <button class= "game_unit empty button-outline" id="1"></button>
+          <button class= "game_unit empty button-outline" id="2"></button>
+          </ul>
+        </div>
+
+        <div class="row">
+          <ul>
+          <button class= "game_unit empty button-outline" id="3"></button>
+          <button class= "game_unit empty button-outline" id="4"></button>
+          <button class= "game_unit empty button-outline" id="5"></button>
+          </ul>
+        </div>
+        <div class="row">
+          <ul>
+          <button class= "game_unit empty button-outline" id="6"></button>
+          <button class= "game_unit empty button-outline" id="7"></button>
+          <button class= "game_unit empty button-outline" id="8"></button>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+
+          <script src="./js/bundle.js"></script>
+  </body>
+</html>
