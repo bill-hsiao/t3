@@ -12,6 +12,7 @@ a {
 .root {
 }
 #name_input_field {
+  text-align: center;
   width: 200px;
   /* align-items: center; */
 }
@@ -67,4 +68,5 @@ li {
 
 .hidden {
   display: none;
+
 }

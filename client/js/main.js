@@ -1,5 +1,7 @@
 const socket = io.connect('http://localhost:4000')
-const app = require('./sockets')(socket)
+const State = require('./State')
+const client = new State()
+const app = require('./sockets')(socket, client)
 
 const state = {
   view: null
@@ -12,14 +14,16 @@ const gameUnit = {
 app.init()
 
 
-
 gameUnit.init()
 
 
 
 
 //eventHandlers
+document.getElementById('new_game').addEventListener('click', () => {
+  app.joinGame()
 
+})
 
 function boardListeners() {
   let board = [...document.getElementsByClassName('game_unit')]
@@ -32,6 +36,6 @@ function boardListeners() {
 function handleClick(evt) {
   let val = evt.target.id;
   app.move(val)
-
+//app.joinGame(val)
 
 }

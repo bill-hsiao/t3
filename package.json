@@ -13,7 +13,8 @@
     "milligram": "^1.3.0",
     "morgan": "~1.8.1",
     "nodemon": "^1.18.6",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "socketio-auth": "^0.1.1"
   },
   "author": "bill hsiao",
   "license": "ISC"

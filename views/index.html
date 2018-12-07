@@ -11,12 +11,14 @@
 <link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
 <link rel='stylesheet' href='/css/style.css' />
 
+
   </head>
   <body>
+  <div class="center"></div>
+    <h1 class="hidden">Tic Tac Toe</h1>
 
-
-    <h1>Tic Tac Toe</h1>
     <div id="root">
+
     <div class="hidden" id="name_output">
       Name:
       <span id="name_output_line"></span>
@@ -27,6 +29,7 @@
       </div>
   </br>
     <button id="new_game">Find Opponent</button>
+  </div>
       <div id="game_area">
         <div class="row">
           <ul>
@@ -53,10 +56,27 @@
       </div>
 
     </div>
-
+    <p>
+        <label for="token">My Token: </label>
+        <input type="text" id="token" name="token" value="secret token" />
+      </p>
+      <p>
+        <button id="connect" onclick="connect()">
+          Connect
+        </button>
+        <button id="disconnect" onclick="disconnect()" disabled>
+          Disconnect
+        </button>
+      </p>
+      <p>
+   <label for="status">Status: </label>
+   <input type="text" id="status"
+     name="status" value="Disconnected"
+     readonly="readonly" style="width: 300px;"
+   />
+ </p>
 
     <script src="/socket.io/socket.io.js"></script>
-
-          <script src="./js/bundle.js"></script>
+<script src="./js/bundle.js"></script>
   </body>
 </html>
