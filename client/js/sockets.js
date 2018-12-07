@@ -10,6 +10,16 @@ function controller(socket, client) {
     socket.on('nextTurn', function(data) {
       console.log('Incoming message:', data);
     });
+    socket.on('newGame', function() {
+      client.newGame()
+      console.log(client.getState());
+      console.log('new game');
+    })
+    socket.on('sendState', function(state) {
+      socket.emit('emittedState', state, client.updateState)
+      console.log('state updated');
+    })
+
   }
   function updatePlayer() {
     socket.emit('updatePlayer', function() {
@@ -18,18 +28,16 @@ function controller(socket, client) {
   }
   //exported methods
   function move(val) {
-    !(state.length % 2) ? false : true
-
-    socket.emit('move', val, function(data) {
-      //
-      console.log('testing' + data);
-      state.push(data)
-      render()
-    });
+    //!(state.length % 2) ? false : true
+    socket.emit('move', val, client.move);
   }
 
   function joinGame(evt) {
-    socket.emit('joinGame', socket.id, client.joinGame
+    let id = socket.id;
+    socket.emit('joinGame', id, function(id) {
+      console.log(id);
+      let temp = client.joinGame.bind(client);
+      temp(id)
     // function(data) {
     //   if (data.length == 2) {
     //     let o = client(data[0])
@@ -39,11 +47,12 @@ function controller(socket, client) {
     //   }
     //   console.log(data);
     // }
+  }
   )
   }
-  function clientReady() {
-    socket.emit('clientReady', )
-  }
+  // function clientReady() {
+  //   socket.emit('clientReady', )
+  // }
   function render() {
     socket.emit('render', state, function(data) {
       console.log(state);
@@ -54,6 +63,11 @@ function controller(socket, client) {
   }
   function modulator(num) {
 
+  }
+  function setClosure(method, data, closure) {
+    console.log(data);
+    let enclosed = method.bind(closure);
+    enclosed(data)
   }
   }
   return {

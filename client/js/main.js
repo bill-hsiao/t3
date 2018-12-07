@@ -1,7 +1,8 @@
 const socket = io.connect('http://localhost:4000')
 const State = require('./State')
 const client = new State()
-const app = require('./sockets')(socket, client)
+const controller = require('./sockets')
+const app = controller(socket, client)
 
 const state = {
   view: null
