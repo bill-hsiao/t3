@@ -4,13 +4,17 @@ class State {
     this.id = null;
     this.state = null;
     this.opponent = null;
-    this.first = null;
+    this.turn = null;
   }
   setId(id) {
-    if (id[1]) {
-      this.opponent = id[1]
+    if (id[1] !== null) {
+      this.id = id[1]
+      this.opponent = id[0]
+      this.turn = 1;
+    } else if(id[1] == null) {
+      this.id = id[0];
+      this.turn = 0;
     }
-    this.id = id[0];
   }
   setOpponent(id) {
     this.opponent = id;
@@ -22,59 +26,64 @@ class State {
   getState() {
     return this.state
   }
-
-
+  getLength() {
+    return this.state.length % 2
+  }
+  getTurn() {
+    return this.turn
+  }
 
   //socket methods
   joinGame(data) {
     console.log('from joingame method' + data);
-    if (typeof data === String) {
+    if (data[1] == null) {
       console.log(data);
       this.setId(data)
     }
-    if (data.length == 2) {
+    if (data[1] !== null ) {
+      //if server sends back an array, it'll be the 2nd player last pushed in
       this.setId(data);
-      this.setOpponent(data[1])
-      //let o = client(data[0])
-      //console.log('client' + o);
-      console.log(data[0]);
-      console.log(data[1]);
     }
-    console.log(data);
   }
 
   updateState(newState) {
-    if (this.state.length == newState.length) {
-      return
-    } else {
-      this.state = newState.slice()
-      render(this.state)
-    }
+    // if (this.state == null) {
+    //   'state null'
+    // }
+    // if (this.state.length == newState.length) {
+    //   return
+    // } else if (this.state.length == (newState.length - 1)
+    //   this.state = newState.slice()
+    // {
+      this.state = newState
+      
+    // }
+
   }
 
   move(data) {
     console.log('testing' + data);
     this.state.push(data)
-    render(this.state)
+    return this.state
   }
 
   render(arr, arr2) {
     if (!arr2) {
-      let view = [...document.getElementsByClassName('game_unit')]
-      console.log(view);
-      if (!arr.length) {
-        return
-      }
-      let view = [...document.getElementsByClassName('game_unit')]
-      console.log(view);
+      let oldView = [...document.getElementsByClassName('game_unit')]
+      console.log(oldView);
+      // oldView = [...document.getElementsByClassName('game_unit')]
+  //    console.log(oldView);
       for (let i = 0; i < arr.length; i ++) {
         if (i % 2 == 0) {
-          let block = view[arr[i]];
-          console.log(block);
+          let block = oldView[arr[i]];
+          block.innerText = 'o'
+          console.log(block.innerText);
+        } else if (i % 2 == 1) {
+          let block = oldView[arr[i]];
+          block.innerText = 'x'
+          console.log(block.innerText);
         }
       }
-    } else {
-
     }
   }
 
@@ -129,24 +138,39 @@ function handleClick(evt) {
 
 },{"./State":1,"./sockets":3}],3:[function(require,module,exports){
 function controller(socket, client) {
-  const state = [];
   //const client = (id) => {return id}
   function init() {
+    //socket event listeners
     socket.on('connect', function() {
+
+
     });
-    socket.on('newGame', function(msg) {
-      console.log(msg);
-    });
-    socket.on('nextTurn', function(data) {
-      console.log('Incoming message:', data);
-    });
+    // socket.on('newGame', function(msg) {
+    //   console.log(msg);
+    // });
+    // socket.on('nextTurn', function(data) {
+    //   console.log('Incoming message:', data);
+    // });
     socket.on('newGame', function() {
       client.newGame()
       console.log(client.getState());
       console.log('new game');
     })
-    socket.on('sendState', function(state) {
-      socket.emit('emittedState', state, client.updateState)
+    socket.on('sendState', function(state, update) {
+      console.log('from sendState' + state);
+  //    let render = client.render.bind(client)
+    //  let enclosed = client.updateState.bind(client)
+  //    enclosed(state)
+  //    render(state)
+     console.log(state, update);
+      // socket.emit('emittedState', state, (state) => {
+        // console.log('from emittedState' + state);
+        // let render = client.render.bind(client)
+        // let enclosed = client.updateState.bind(client)
+        // enclosed(state)
+        // render(state)
+      //  client.updateState
+      // })
       console.log('state updated');
     })
 
@@ -158,12 +182,26 @@ function controller(socket, client) {
   }
   //exported methods
   function move(val) {
-    //!(state.length % 2) ? false : true
-    socket.emit('move', val, client.move);
+    let gameTurn = client.getLength();
+    let clientTurn = client.getTurn();
+    if (clientTurn !== gameTurn) {
+      return
+    } else if (clientTurn == gameTurn ){
+      socket.emit('move', val, function(val) {
+        let render = client.render.bind(client)
+
+        let move = client.move.bind(client)
+      ///  let render = client.render.bind(client)
+        render(move(val))
+
+      })
+    }
+
   }
 
-  function joinGame(evt) {
+  function joinGame() {
     let id = socket.id;
+    // let method = client.joinGame
     socket.emit('joinGame', id, function(id) {
       console.log(id);
       let temp = client.joinGame.bind(client);
@@ -183,24 +221,31 @@ function controller(socket, client) {
   // function clientReady() {
   //   socket.emit('clientReady', )
   // }
-  function render() {
-    socket.emit('render', state, function(data) {
-      console.log(state);
-
-  })
+  // function render(state) {
+  //   client.render(state)
+  //   socket.emit('render', state, function(data) {
+  //     console.log(state);
+  //
+  // })
   function modulate() {
 
   }
   function modulator(num) {
 
   }
-  }
+//  function render()
+  // function setClosure(method, data, closure) {
+  //   console.log(data);
+  //   let enclosed = method.bind(closure);
+  //   enclosed(data)
+  // }
   return {
     init: init,
-    updatePlayer:updatePlayer,
+    //updatePlayer:updatePlayer,
     move: move,
-    joinGame:joinGame,
-    render: render
+    joinGame:joinGame
+    // ,
+    // render: render
   }
 }
 

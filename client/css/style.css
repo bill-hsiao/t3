@@ -17,6 +17,8 @@ a {
   /* align-items: center; */
 }
 #game_area{
+  font: 10px "Lucida Grande", Helvetica, Arial, sans-serif;
+
     width: 200px;
     height: 200px;
     /* position: absolute; */
