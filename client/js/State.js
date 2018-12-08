@@ -15,10 +15,6 @@ class State {
       this.turn = 0;
     }
   }
-  setOpponent(id) {
-    this.opponent = id;
-    return this.opponent
-  }
   newGame() {
     this.state = [];
   }
@@ -34,9 +30,7 @@ class State {
 
   //socket methods
   joinGame(data) {
-    console.log('from joingame method' + data);
     if (data[1] == null) {
-      console.log(data);
       this.setId(data)
     }
     if (data[1] !== null ) {
@@ -46,20 +40,10 @@ class State {
   }
 
   updateState(newState) {
-    // if (this.state == null) {
-    //   'state null'
-    // }
-    // if (this.state.length == newState.length) {
-    //   return
-    // } else if (this.state.length == (newState.length - 1)
-    //   this.state = newState.slice()
-    // {
-      this.state = newState
-      console.log(this.state);
-      console.log(newState);
-      return this.state
-    // }
-
+    this.state = newState
+    console.log(this.state);
+    console.log(newState);
+    return this.state
   }
 
   move(data) {
@@ -72,8 +56,6 @@ class State {
     if (!arr2) {
       let oldView = [...document.getElementsByClassName('game_unit')]
       console.log(oldView);
-      // oldView = [...document.getElementsByClassName('game_unit')]
-  //    console.log(oldView);
       for (let i = 0; i < arr.length; i ++) {
         if (i % 2 == 0) {
           let block = oldView[arr[i]];
@@ -87,8 +69,6 @@ class State {
       }
     }
   }
-
-
 }
 
 module.exports = State
