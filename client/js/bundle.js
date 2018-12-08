@@ -56,7 +56,9 @@ class State {
     //   this.state = newState.slice()
     // {
       this.state = newState
-      
+      console.log(this.state);
+      console.log(newState);
+      return this.state
     // }
 
   }
@@ -156,13 +158,13 @@ function controller(socket, client) {
       console.log(client.getState());
       console.log('new game');
     })
-    socket.on('sendState', function(state, update) {
+    socket.on('sendState', function(state) {
       console.log('from sendState' + state);
   //    let render = client.render.bind(client)
     //  let enclosed = client.updateState.bind(client)
   //    enclosed(state)
   //    render(state)
-     console.log(state, update);
+     console.log(state);
       // socket.emit('emittedState', state, (state) => {
         // console.log('from emittedState' + state);
         // let render = client.render.bind(client)
@@ -171,12 +173,14 @@ function controller(socket, client) {
         // render(state)
       //  client.updateState
       // })
+      let nextState = client.updateState(state)
+      client.render(nextState)
       console.log('state updated');
     })
 
   }
   function updatePlayer() {
-    socket.emit('updatePlayer', function() {
+    socket.emit('updatePlayer', (state) => {
       console.log('testing');
     });
   }
@@ -185,14 +189,18 @@ function controller(socket, client) {
     let gameTurn = client.getLength();
     let clientTurn = client.getTurn();
     if (clientTurn !== gameTurn) {
+      console.log('client turn ' + clientTurn);
+      console.log('gameTurn ' + gameTurn);
       return
     } else if (clientTurn == gameTurn ){
+      console.log('client turn ' + clientTurn);
+      console.log('gameTurn ' + gameTurn);
       socket.emit('move', val, function(val) {
-        let render = client.render.bind(client)
+        let bound = client.render.bind(client)
 
-        let move = client.move.bind(client)
+        let boundMove = client.move.bind(client)
       ///  let render = client.render.bind(client)
-        render(move(val))
+        boundMove(val)
 
       })
     }

@@ -55,7 +55,9 @@ class State {
     //   this.state = newState.slice()
     // {
       this.state = newState
-      
+      console.log(this.state);
+      console.log(newState);
+      return this.state
     // }
 
   }
