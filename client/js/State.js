@@ -5,6 +5,7 @@ class State {
     this.opponent = null;
     this.turn = null;
   }
+  
   setId(id) {
     if (id[1] !== null) {
       this.id = id[1]
@@ -21,8 +22,14 @@ class State {
   getState() {
     return this.state
   }
+  get length() {
+    return this.state.length % 2
+  }
   getLength() {
     return this.state.length % 2
+  }
+  get turn() {
+    return this.turn
   }
   getTurn() {
     return this.turn
@@ -41,13 +48,10 @@ class State {
 
   updateState(newState) {
     this.state = newState
-    console.log(this.state);
-    console.log(newState);
     return this.state
   }
 
   move(data) {
-    console.log('testing' + data);
     this.state.push(data)
     return this.state
   }

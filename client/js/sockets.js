@@ -3,21 +3,31 @@ function controller(socket, client) {
   function init() {
     //socket event listeners
     socket.on('connect', function() {
-
-
+      //listens for newGame after being connected
+      socket.on('newGame', function() {
+        client.newGame()
+        console.log(client.getState());
+        console.log('new game');
+      });
+      //listens for sendState after being connected
+      socket.on('sendState', function(state) {
+        let nextState = client.updateState(state)
+        client.render(nextState)
+        console.log('state updated');
+      });
     });
 
-    socket.on('newGame', function() {
-      client.newGame()
-      console.log(client.getState());
-      console.log('new game');
-    })
-
-    socket.on('sendState', function(state) {
-      let nextState = client.updateState(state)
-      client.render(nextState)
-      console.log('state updated');
-    })
+    // socket.on('newGame', function() {
+    //   client.newGame()
+    //   console.log(client.getState());
+    //   console.log('new game');
+    // })
+    //
+    // socket.on('sendState', function(state) {
+    //   let nextState = client.updateState(state)
+    //   client.render(nextState)
+    //   console.log('state updated');
+    // })
 
   }
 
@@ -32,7 +42,7 @@ function controller(socket, client) {
         boundMove(val)
       });
     }
-
+  }
   function joinGame() {
     let id = socket.id;
     socket.emit('joinGame', id, function(id) {
@@ -42,13 +52,15 @@ function controller(socket, client) {
     });
   }
   function newGame() {
-
+    socket.emit('newGame', function() {
+      console.log('acknowledgement');
+    })
   }
   return {
     init: init,
     move: move,
-    joinGame:joinGame
-
+    joinGame:joinGame,
+    newGame:newGame
   }
 }
 
