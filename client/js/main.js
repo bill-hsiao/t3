@@ -25,6 +25,9 @@ document.getElementById('new_game').addEventListener('click', () => {
   app.joinGame()
 
 })
+document.getElementById('restart').addEventListener('click', app.newGame)
+
+
 
 function boardListeners() {
   let board = [...document.getElementsByClassName('game_unit')]

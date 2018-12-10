@@ -1,4 +1,7 @@
 function controller(socket, client) {
+  //using these listeners
+
+  //using these emitters
 
   function init() {
     //socket event listeners
@@ -16,21 +19,7 @@ function controller(socket, client) {
         console.log('state updated');
       });
     });
-
-    // socket.on('newGame', function() {
-    //   client.newGame()
-    //   console.log(client.getState());
-    //   console.log('new game');
-    // })
-    //
-    // socket.on('sendState', function(state) {
-    //   let nextState = client.updateState(state)
-    //   client.render(nextState)
-    //   console.log('state updated');
-    // })
-
   }
-
   function move(val) {
     let gameTurn = client.getLength();
     let clientTurn = client.getTurn();
@@ -51,10 +40,32 @@ function controller(socket, client) {
       temp(id)
     });
   }
+  // function newGame() {
+  //   let pal = function() {
+  //     let boundGet = client.getState.bind(client)
+  //     let boundNew = client.newGame.bind(client)
+  //     console.log(boundNew());
+  //     boundNew();
+  //   }
+  //   socket.emit('newGame', pal, function(pal) {
+  //     pal()
+  //   });
+  // }
   function newGame() {
-    socket.emit('newGame', function() {
-      console.log('acknowledgement');
-    })
+    let data = 'need new game!'
+    socket.emit('newGame',
+            data,
+            function(state){
+                    console.log(state);
+                  let updateState = client.updateState.bind(client)
+                    let nextState = updateState(state)
+                    let boundRender = client.render.bind(client)
+                    boundRender(nextState)
+
+                    //client.render(nextState)
+
+            }
+           );
   }
   return {
     init: init,

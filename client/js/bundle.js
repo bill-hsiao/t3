@@ -6,6 +6,7 @@ class State {
     this.opponent = null;
     this.turn = null;
   }
+
   setId(id) {
     if (id[1] !== null) {
       this.id = id[1]
@@ -16,15 +17,29 @@ class State {
       this.turn = 0;
     }
   }
+
   newGame() {
-    this.state = [];
+    if (this.state !== null) {
+      for (let i = 0; i < this.state.length; i ++) {
+        this.state.pop()
+      }
+      return this.state
+    } else if (this.state == null) {
+      this.state = [];
+      return this.state
+    }
   }
+
   getState() {
     return this.state
+  }
+  get length() {
+    return this.state.length % 2
   }
   getLength() {
     return this.state.length % 2
   }
+
   getTurn() {
     return this.turn
   }
@@ -52,17 +67,25 @@ class State {
 
   render(arr, arr2) {
     if (!arr2) {
-      let oldView = [...document.getElementsByClassName('game_unit')]
-      console.log(oldView);
-      for (let i = 0; i < arr.length; i ++) {
-        if (i % 2 == 0) {
-          let block = oldView[arr[i]];
-          block.innerText = 'o'
-          console.log(block.innerText);
-        } else if (i % 2 == 1) {
-          let block = oldView[arr[i]];
-          block.innerText = 'x'
-          console.log(block.innerText);
+      if (arr === 'z') {
+        let oldView = [...document.getElementsByClassName('game_unit')]
+        for (let i = 0; i < 9; i ++) {
+          let block = oldView[i];
+          block.innerText = '';
+        }
+      } else {
+        let oldView = [...document.getElementsByClassName('game_unit')]
+        console.log(oldView);
+        for (let i = 0; i < arr.length; i ++) {
+          if (i % 2 == 0) {
+            let block = oldView[arr[i]];
+            block.innerText = 'o'
+            console.log(block.innerText);
+          } else if (i % 2 == 1) {
+            let block = oldView[arr[i]];
+            block.innerText = 'x'
+            console.log(block.innerText);
+          }
         }
       }
     }
@@ -99,6 +122,9 @@ document.getElementById('new_game').addEventListener('click', () => {
   app.joinGame()
 
 })
+document.getElementById('restart').addEventListener('click', app.newGame)
+
+
 
 function boardListeners() {
   let board = [...document.getElementsByClassName('game_unit')]
@@ -117,6 +143,9 @@ function handleClick(evt) {
 
 },{"./State":1,"./sockets":3}],3:[function(require,module,exports){
 function controller(socket, client) {
+  //using these listeners
+
+  //using these emitters
 
   function init() {
     //socket event listeners
@@ -134,21 +163,7 @@ function controller(socket, client) {
         console.log('state updated');
       });
     });
-
-    // socket.on('newGame', function() {
-    //   client.newGame()
-    //   console.log(client.getState());
-    //   console.log('new game');
-    // })
-    //
-    // socket.on('sendState', function(state) {
-    //   let nextState = client.updateState(state)
-    //   client.render(nextState)
-    //   console.log('state updated');
-    // })
-
   }
-
   function move(val) {
     let gameTurn = client.getLength();
     let clientTurn = client.getTurn();
@@ -169,10 +184,39 @@ function controller(socket, client) {
       temp(id)
     });
   }
+  // function newGame() {
+  //   let pal = function() {
+  //     let boundGet = client.getState.bind(client)
+  //     let boundNew = client.newGame.bind(client)
+  //     console.log(boundNew());
+  //     boundNew();
+  //   }
+  //   socket.emit('newGame', pal, function(pal) {
+  //     pal()
+  //   });
+  // }
   function newGame() {
-    socket.emit('newGame', function() {
-      console.log('newgame');
-    })
+    let data = 'need new game!'
+    socket.emit('newGame',
+            data,
+            function(state){
+                    // send data
+                    // know we got it once the server calls this callback
+                    // note -in this ex we dont need to send back any data
+                    // - could just have called fn() at server side
+                    console.log(state);
+                    // let boundGet = client.getState.bind(client)
+                    // let boundNew = client.newGame.bind(client)
+                    // boundNew();
+                    let updateState = client.updateState.bind(client)
+                    let nextState = updateState(state)
+                    let boundRender = client.render.bind(client)
+                    boundRender(nextState)
+
+                    //client.render(nextState)
+
+            }
+           );
   }
   return {
     init: init,
